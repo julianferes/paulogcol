@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bykom.mybatis.bykomMapper">
+
+	<resultMap id="resMapResponseBykom" 	type="EtlBykomVO">
+		<result property="pidtrama"					column="PIDTRAMA" />
+		<result property="pidunidad"       			column="PIDUNIDAD" />
+		<result property="ptiptransm"				column="PTIPTRANSM" />
+		<result property="plongitud"       			column="PLONGITUD" />
+		<result property="platitud"					column="PLATITUD" />
+		<result property="pvelocidad"       		column="PVELOCIDAD" />
+		<result property="pdireccion"				column="PDIRECCION" />
+		<result property="pfechagps"       			column="PFECHAGPS" />
+		<result property="pevento"					column="PEVENTO" />
+		<result property="pignicion"       			column="PIGNICION" />
+		<result property="numeroSateliteToStatus"	column="NUMERO_SATALITES_TO_STATUS" />
+		<result property="podometroParcial"       	column="PODOMETRO_PARCIAL" />
+		<result property="podometroTotal"			column="PODOMETRO_TOTAL" />
+	</resultMap>
+
+    <select id="buscarBykom"  resultMap="resMapResponseBykom" parameterType="String">
+    <![CDATA[
+		  select 
+		      posi_actual.ID_VEHICULO as PIDTRAMA,
+		      concat('CGPS0000',abmacodigos.callingid1) as PIDUNIDAD,
+		      'CL' AS PTIPTRANSM,
+			  posi_actual.longitud AS PLONGITUD,
+		      posi_actual.latitud AS PLATITUD,
+		      posi_actual.velocidad AS PVELOCIDAD,
+		      posi_actual.aproximacion AS PDIRECCION,
+		      posi_actual.fecha_mensaje as PFECHAGPS,
+		      posi_actual.evento as PEVENTO,
+		      posi_actual.contacto as PIGNICION,
+		      posi_actual.satelites as NUMERO_SATALITES_TO_STATUS,
+		      posi_actual.odometro_parcial AS PODOMETRO_PARCIAL,
+		      posi_actual.odometro_total AS PODOMETRO_TOTAL
+		  from abmacodigos abmacodigos, posi_actual posi_actual
+			  where posi_actual.order_rl=abmacodigos.order_id and abmacodigos.objetivo=2
+			  and abmacodigos.callingid1 = #{imei,jdbcType=VARCHAR}
+        ]]>
+    </select>
+	
+
+   
+</mapper>

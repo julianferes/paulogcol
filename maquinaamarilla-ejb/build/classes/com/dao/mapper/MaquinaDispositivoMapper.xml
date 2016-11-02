@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Mapper.MaquinariaDispositivoVO">
+	<resultMap type="MaquinaDispositivoVO" id="idResultadoMapMaquinaDispositivoVO" >
+			<id property="id" 										column="ID_MAQUINA_DISPOSITIVO"/>
+			<result property="consecutivoUbicacion" 	column="ID_CONSECUTIVO"/>
+			<result property="maquinaIdRunt.id" 					column="ID_MAQUINA"/>
+			<result property="maquinaIdRunt.idRunt" 				column="IDRUNT_MAQUINA"/>
+			<result property="maquinaIdRunt.serie" 					column="SERIE_MAQUINA"/>
+			<result property="maquinaIdRunt.codMarca.codigo" 		column="CODMARCA_MAQUINA" />
+			<result property="maquinaIdRunt.codLinea.codigo" 		column="CODLINEA_MAQUINA"/>
+			<result property="maquinaIdRunt.modelo" 				column="MODELO_MAQUINA"/>
+			<result property="maquinaIdRunt.tipoMaquina.codigo" 	column="TIPOMAQUINA_MAQUINA"/>
+			<result property="maquinaIdRunt.idUnidadVigente" 		column="IDUNIDADVIGENTE_MAQUINA"/>
+			<result property="maquinaIdRunt.motor" 					column="MOTOR_MAQUINA"/>
+			<result property="maquinaIdRunt.chasis" 				column="CHASIS_MAQUINA"/>
+			<result property="maquinaIdRunt.tipoUnidadMaquina" 		column="TIPOUNIDADMAQUINA_MAQUINA"/>
+			<result property="maquinaIdRunt.estado" 				column="ESTADO_MAQUINA"/>
+			<result property="unidRastIdUnidad.id" 					column="ID_DISPOSITIVO"/>
+			<result property="unidRastIdUnidad.idUnidad" 			column="IDUNIDAD_DISPOSITIVO"/>
+			<result property="unidRastIdUnidad.codMarca" 			column="CODMARCA_DISPOSITIVO"/>
+			<result property="unidRastIdUnidad.codLinea" 			column="CODLINEA_DISPOSITIVO"/>
+			<result property="unidRastIdUnidad.imei" 				column="IMEI_DISPOSITIVO"/>
+			<result property="unidRastIdUnidad.tarjetaSim" 			column="TARJETA_SIM_DISPOSITIVO"/>
+			<result property="unidRastIdUnidad.nroMovil" 			column="NRO_MOVIL_DISPOSITIVO"/>
+			<result property="unidRastIdUnidad.operadorMovil" 		column="OPERADORMOVIL_DISPOSITIVO"/>
+			<result property="unidRastIdUnidad.operadorSatelital" 	column="OPERADORSATELITAL_DISPOSITIVO"/>
+			<result property="unidRastIdUnidad.observacion" 		column="OBSERVACION_DISPOSITIVO"/>
+			<result property="unidRastIdUnidad.serieDispositivo" 	column="SERIE_DISPOSITIVO"/>
+			<result property="unidRastIdUnidad.estado" 				column="ESTADO_DISPOSITIVO"/>
+			<result property="fechaInstalacion" 					column="FECHAINSTALACION"/>
+			<result property="estado" 								column="ESTADO"/>
+			<result property="documentoInstalacion" 				column="DOCUMENTOINSTALACION"/>
+			<result property="numeroValido" 						column="NUMERO_VALIDO"/>
+	</resultMap>
+  
+	<select id="idConsultarRegistrosMaquinaDispositivoVO" resultMap="idResultadoMapMaquinaDispositivoVO" >
+		 <![CDATA[
+				select
+					madisp.ID AS ID_MAQUINA_DISPOSITIVO,
+					(SELECT MAX(ID) + 1 FROM CONSECUTIVO_UBICACION_WS) as ID_CONSECUTIVO,
+					ma.ID AS ID_MAQUINA,
+					ma.IDRUNT AS IDRUNT_MAQUINA,
+					ma.SERIE AS SERIE_MAQUINA,
+					ma.CODMARCA AS CODMARCA_MAQUINA,
+					ma.CODLINEA AS CODLINEA_MAQUINA,
+					ma.MODELO AS MODELO_MAQUINA,
+					ma.TIPOMAQUINA AS TIPOMAQUINA_MAQUINA,
+					ma.IDUNIDADVIGENTE AS IDUNIDADVIGENTE_MAQUINA,
+					ma.MOTOR AS MOTOR_MAQUINA,
+					ma.CHASIS AS CHASIS_MAQUINA,
+					ma.TIPOUNIDADMAQUINA AS TIPOUNIDADMAQUINA_MAQUINA,
+					ma.estado AS ESTADO_MAQUINA,
+					disp.ID AS ID_DISPOSITIVO,
+					disp.IDUNIDAD AS IDUNIDAD_DISPOSITIVO,
+					disp.CODMARCA AS CODMARCA_DISPOSITIVO,
+					disp.CODLINEA AS CODLINEA_DISPOSITIVO,
+					disp.IMEI AS IMEI_DISPOSITIVO,
+					disp.TARJETA_SIM AS TARJETA_SIM_DISPOSITIVO,
+					disp.NRO_MOVIL AS NRO_MOVIL_DISPOSITIVO,
+					disp.OPERADORMOVIL AS OPERADORMOVIL_DISPOSITIVO,
+					disp.OPERADORSATELITAL AS OPERADORSATELITAL_DISPOSITIVO,
+					disp.OBSERVACION AS OBSERVACION_DISPOSITIVO,
+					disp.SERIE_DISPOSITIVO AS SERIE_DISPOSITIVO,
+					disp.estado AS ESTADO_DISPOSITIVO,
+					madisp.FECHAINSTALACION,
+					madisp.ESTADO,
+					madisp.DOCUMENTOINSTALACION,
+					madisp.NUMERO_VALIDO
+				from ma_maquina_dispositivo madisp
+				left join ma_maquina ma on ma.idrunt = madisp.MAQUINAIDRUNT
+				left join ma_dispositivo disp on disp.IDUNIDAD = madisp.UNIDRASTIDUNIDAD
+		 ]]>
+	</select>
+	
+	<update id="idActualizarMaquinaDispositivo" parameterType="MaquinaDispositivoVO" >
+	  UPDATE ma_maquina_dispositivo
+	  SET ESTADO = 'R'
+	  WHERE ID = #{id}
+	</update>
+	
+</mapper>
